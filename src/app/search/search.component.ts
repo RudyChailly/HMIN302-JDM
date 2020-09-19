@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { RezoDumpService } from '../rezo-dump/rezo-dump.service';
+import { RelationsService } from '../relations/relations.service';
 
 @Component({
 	selector: 'app-search',
@@ -15,7 +16,8 @@ export class SearchComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private rezoDumpService: RezoDumpService
+		private rezoDumpService: RezoDumpService,
+		private relationsService: RelationsService
 	) { }
 
 	ngOnInit(): void {
@@ -25,7 +27,9 @@ export class SearchComponent implements OnInit {
 	}
 
 	search() {
-		this.rezoDumpService.requestRelations("chien");
+		this.rezoDumpService.requestRelations(this.searchForm.get("terme").value).then(relations => {
+			this.relationsService.setRelations(relations);
+		});
 	}
 
 }

@@ -98,33 +98,32 @@ export class RezoDumpService {
 				if (relations.synonymes.length > 0) {
 					relations.synonymes = relations.synonymes.sort(function(a,b) { return b.poids - a.poids}).slice(0,10);
 					poids_max = relations.synonymes[0].poids;
-					relations.synonymes.forEach(synonyme => {
+					/*relations.synonymes.forEach(synonyme => {
 						synonyme.poids = synonyme.poids / poids_max;
-					});
+					});*/
 				}
 				if (relations.antonymes.length > 0) {
 					relations.antonymes = relations.antonymes.sort(function(a,b) { return b.poids - a.poids}).slice(0,10);
 					poids_max = relations.antonymes[0].poids;
-					relations.antonymes.forEach(antonyme => {
+					/*relations.antonymes.forEach(antonyme => {
 						antonyme.poids = antonyme.poids / poids_max;
-					});
+					});*/
 				}
 				if (relations.generiques.length > 0) {
 					relations.generiques = relations.generiques.sort(function(a,b) { return b.poids - a.poids}).slice(0,10);
 					poids_max = relations.generiques[0].poids;
-					relations.generiques.forEach(generique => {
+					/*relations.generiques.forEach(generique => {
 						generique.poids = generique.poids / poids_max;
-					});
+					});*/
 				}			
 
 				if (relations.specifiques.length > 0) {
 					relations.specifiques = relations.specifiques.sort(function(a,b) { return b.poids - a.poids});
 					poids_max = relations.specifiques[0].poids;
-					relations.specifiques.forEach(specifique => {
+					/*relations.specifiques.forEach(specifique => {
 						specifique.poids = specifique.poids / poids_max;
-					});
+					});*/
 				}
-				console.log(relations);
 				resolve(relations);
 			}
 		}));

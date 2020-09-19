@@ -1,0 +1,27 @@
+<div class="container mt-4">
+	<div class="show-relations-boutons d-flex justify-content-between">
+		<div id="show-relations-bouton-synonymes" class="col-3 bg-white border d-flex flex-column justify-content-center text-center" (click)="afficherTypeRelations('synonymes')">
+			<div> Synonymes </div>
+		</div>
+
+		<div id="show-relations-bouton-antonymes" class="col-3 bg-white border d-flex flex-column justify-content-center text-center" (click)="afficherTypeRelations('antonymes')">
+			<div> Antonymes </div>
+		</div>
+
+		<div id="show-relations-bouton-specifiques" class="col-3 bg-white border d-flex flex-column justify-content-center text-center" (click)="afficherTypeRelations('specifiques')">
+			<div> Spécifiques </div>
+		</div>
+
+		<div id="show-relations-bouton-generiques" class="col-3 bg-white border d-flex flex-column justify-content-center text-center" (click)="afficherTypeRelations('generiques')">
+			<div> Génériques </div>
+		</div>
+	</div>
+
+	<div class="show-relations-result bg-white mt-4 border d-flex flex-wrap"> 
+		<div *ngFor="let relation of relationsAffichees" class="col-2 d-flex flex-column justify-content-center text-center"> 
+			<div> {{relation.terme}} </div>
+			<div> ({{relation.poids}}) </div>
+		</div>
+	</div>
+</div>
+
