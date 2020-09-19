@@ -1,2 +1,2 @@
 let serverPort = "8888";
-export let serverURL = "http://localhost:" + serverPort;
+export let serverURL = "51.91.120.151:" + serverPort;
