@@ -1,3 +1,4 @@
+<label for="show-relations-filters-relation" class="font-weight-bold"> HISTORIQUE </label>
 <div class="bg-white py-2 d-flex flex-column justify-content-center mb-3">
 	<div class="ml-3">
 		<span *ngFor="let terme of historiqueTermes; let i = index;">
@@ -5,11 +6,11 @@
 				<span class="breadcrumb-lien text-primary"  (click)="requestRelations(terme, i+1)"> 
 					{{terme}}
 				</span>
-				<span> > </span>
+				<span class="font-weight-bold"> > </span>
 			</ng-container>
 
 			<ng-template #historiqueTermesLast>
-				<span> 
+				<span class="font-weight-bold"> 
 					{{terme}}
 				</span>
 			</ng-template>

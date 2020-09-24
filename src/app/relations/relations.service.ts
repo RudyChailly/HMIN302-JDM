@@ -6,7 +6,8 @@ import { Observable, Subject } from 'rxjs';
 })
 export class RelationsService {
 
-	terme : string;
+	terme : string = "";
+	termeSubject = new Subject<string>();
 	typeRelation : number = 5;
 	relations;
 	relationsSubject = new Subject<any>();
@@ -18,6 +19,7 @@ export class RelationsService {
 	/******************** TERME ********************/
 	setTerme(terme: string) {
 		this.terme = terme;
+		this.termeSubject.next(terme);
 	}
 
 	getTerme(): string {

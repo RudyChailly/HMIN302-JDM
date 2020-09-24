@@ -30,6 +30,7 @@ export class SearchComponent implements OnInit {
 		let terme = this.searchForm.get("terme").value;
 		this.rezoDumpService.requestRelations(terme, this.relationsService.getTypeRelation());
 		this.relationsService.setHistoriqueTermes([terme]);
+		this.relationsService.setTerme(terme);
 	}
 
 }

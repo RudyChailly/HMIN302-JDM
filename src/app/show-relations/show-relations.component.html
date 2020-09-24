@@ -1,9 +1,9 @@
 <div [ngClass]="{'invisible' : relationsAffichees == null}" class="container my-4">
+	
+	<h2 id="show-relations-terme" class="font-weight-bold mb-3"> {{terme}} </h2>
 	<app-breadcrumb> </app-breadcrumb>
-	<h3 id="show-relations-terme" class="font-weight-bold"> </h3>
 	<app-show-relations-filters> </app-show-relations-filters>
-
-	<div class="show-relations-result bg-white mt-3 border d-flex flex-wrap"> 
+	<div class="show-relations-result bg-white border d-flex flex-wrap"> 
 		<div *ngFor="let relation of relationsAffichees" class="show-relations-result-item col-2 d-flex flex-column justify-content-center text-center py-3" (click)="requestRelations(relation.terme)"> 
 			<div> {{relation.terme}} </div>
 			<div> ({{relation.poids}}) </div>
