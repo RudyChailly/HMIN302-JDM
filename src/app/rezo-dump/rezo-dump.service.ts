@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http'
 import { Observable, Subject } from 'rxjs';
 import { serverURL } from '../app.config';
 
+import { RelationsService } from '../relations/relations.service';
+
 const httpOptions = {
 	headers: new HttpHeaders ({
 		"Access-Control-Allow-Methods": "GET,POST",
@@ -17,10 +19,11 @@ const httpOptions = {
 export class RezoDumpService {
 
 	constructor(
-		private http: HttpClient
-		) { }
+		private http: HttpClient,
+		private relationsService: RelationsService
+	) { }
 
-	requestRelations(terme: string) {
+	requestRelations(terme: string, typeRelation: number) {
 		let idTerme;
 		let mots = {};
 		let relations = {
@@ -31,7 +34,7 @@ export class RezoDumpService {
 			"antonymes": [], 
 			"lemmes": [] 
 		};
-		return new Promise(resolve => this.http.get(serverURL +'/rezo-dump/'+encodeURIComponent(terme)).subscribe(CODE => {
+		return new Promise(resolve => this.http.get(serverURL +'/rezo-dump/'+encodeURIComponent(terme)+"/"+typeRelation).subscribe(CODE => {
 			if (CODE['text'] == undefined || CODE['text'] == null) {
 				resolve(terme);
 			}
@@ -96,7 +99,7 @@ export class RezoDumpService {
 				}
 				let poids_max;
 				if (relations.synonymes.length > 0) {
-					relations.synonymes = relations.synonymes.sort(function(a,b) { return b.poids - a.poids}).slice(0,10);
+					relations.synonymes = relations.synonymes.sort(function(a,b) { return b.poids - a.poids});
 					poids_max = relations.synonymes[0].poids;
 					/*relations.synonymes.forEach(synonyme => {
 						synonyme.poids = synonyme.poids / poids_max;
@@ -124,8 +127,15 @@ export class RezoDumpService {
 						specifique.poids = specifique.poids / poids_max;
 					});*/
 				}
+				this.relationsService.setRelations(relations);
+				this.relationsService.setTypeRelation(typeRelation);
+				this.relationsService.setTerme(terme);
 				resolve(relations);
 			}
 		}));
+	}
+
+	requestRelationsType(typeRelation: number) {
+		this.requestRelations(this.relationsService.getTerme(), typeRelation)
 	}
 }

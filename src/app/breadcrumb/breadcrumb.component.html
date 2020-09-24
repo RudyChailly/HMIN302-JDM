@@ -1,0 +1,20 @@
+<div class="bg-white py-2 d-flex flex-column justify-content-center mb-3">
+	<div class="ml-3">
+		<span *ngFor="let terme of historiqueTermes; let i = index;">
+			<ng-container *ngIf="i != (historiqueTermes.length - 1); else historiqueTermesLast">
+				<span class="breadcrumb-lien text-primary"  (click)="requestRelations(terme, i+1)"> 
+					{{terme}}
+				</span>
+				<span> > </span>
+			</ng-container>
+
+			<ng-template #historiqueTermesLast>
+				<span> 
+					{{terme}}
+				</span>
+			</ng-template>
+			
+
+		</span>
+	</div>
+</div>

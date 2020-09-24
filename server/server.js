@@ -27,4 +27,20 @@ app.get("/rezo-dump/:terme", (req, res) => {
 		);
 });
 
+app.get('/rezo-dump/:terme/:typeRelation', (req,res) => {
+	let terme = req.params.terme;
+	let typeRelation = req.params.typeRelation;
+	request({encoding: null, uri: "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel="+terme+"&rel="+typeRelation+"&relin=norelin"}, 
+		function(error, response, source_code) {
+			if (source_code) {
+				let utf8 = iconv.decode(new Buffer(source_code), "ISO-8859-1");
+				res.end(JSON.stringify({'text': utf8}));
+			}
+			else {
+				res.end(JSON.stringify([]));
+			}
+		}
+	);
+});
+
 app.listen(8888);

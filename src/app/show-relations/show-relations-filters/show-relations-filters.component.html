@@ -1,0 +1,11 @@
+<form [formGroup]="showRelationsFiltersForm" class="row" autocomplete="off">
+<div class="form-group col-6">
+    <label for="show-relations-filters-relation" class="font-weight-bold"> RELATION </label>
+    <select class="form-control" id="show-relations-filters-relation" formControlName="relation">
+      <option *ngFor="let relation of relations" value="{{relation.id}}">
+      	{{relation.nom}}
+      </option>
+    </select>
+  </div>
+
+</form>
