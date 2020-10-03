@@ -22,13 +22,14 @@ export class RezoDumpService {
 	constructor(
 		private http: HttpClient,
 		private relationsService: RelationsService
-		) { }
+	) { }
 
 	requestRelations(terme: string, typeRelation: number) {
 		let idTerme;
 		let mots = {};
 		let relations;
-		let typeRelationName = getRelationById(typeRelation).nom.toLowerCase();
+		let relationById = getRelationById(typeRelation);
+		let typeRelationName = relationById.nom.toLowerCase();
 		// Si le terme en paramètre est le même que terme entré : changement de type de relation
 		if (terme == this.relationsService.getTerme()) {
 			relations = this.relationsService.getRelations();
@@ -93,7 +94,7 @@ export class RezoDumpService {
 						synonyme.poids = synonyme.poids / poids_max;
 					});*/
 				}
-				this.relationsService.setTypeRelation(typeRelation);
+				this.relationsService.setTypeRelation(relationById);
 				this.relationsService.setTerme(terme);
 				this.relationsService.setRelations(relations);
 				console.log(relations);

@@ -1,17 +1,17 @@
-<label for="show-relations-filters-relation" class="font-weight-bold"> HISTORIQUE </label>
 <div class="bg-white py-2 d-flex flex-column justify-content-center mb-3">
 	<div class="ml-3">
 		<span *ngFor="let terme of historiqueTermes; let i = index;">
 			<ng-container *ngIf="i != (historiqueTermes.length - 1); else historiqueTermesLast">
-				<span class="breadcrumb-lien text-primary"  (click)="requestRelations(terme, i+1)"> 
-					{{terme}}
+				<span class="breadcrumb-lien text-primary"  (click)="requestRelations(terme.terme, i+1)"> 
+					{{terme.terme}}
 				</span>
-				<span class="font-weight-bold"> > </span>
+				<span class="badge badge-secondary font-weight-bold px-0 mx-1"> 
+					<i class="icon-right-open"> </i>{{terme.relation}}<i class="icon-right-open"> </i>
+				</span>
 			</ng-container>
 
 			<ng-template #historiqueTermesLast>
-				<span class="font-weight-bold"> 
-					{{terme}}
+				<span class="font-weight-bold">  {{terme.terme}}
 				</span>
 			</ng-template>
 			

@@ -27,7 +27,7 @@ export class ShowRelationsComponent implements OnInit {
 			this.terme = terme;
 		});
 		this.relationsService.relationsSubject.subscribe(relations => {
-			let typeRelationName = getRelationById(this.relationsService.getTypeRelation()).nom.toLowerCase();
+			let typeRelationName = getRelationById(this.relationsService.getTypeRelation().id).nom.toLowerCase();
 			this.relationsAffichees = relations[typeRelationName];
 		});
 	}
@@ -40,7 +40,7 @@ export class ShowRelationsComponent implements OnInit {
 	}
 
 	requestRelations(terme: string): void {
-		this.rezoDumpService.requestRelations(terme, this.relationsService.getTypeRelation()).then(relations => {
+		this.rezoDumpService.requestRelations(terme, this.relationsService.getTypeRelation().id).then(relations => {
 			this.relationsService.addToHistoriqueTermes(terme);
 		});
 	}

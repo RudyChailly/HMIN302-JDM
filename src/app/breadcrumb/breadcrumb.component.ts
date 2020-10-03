@@ -9,7 +9,7 @@ import { RezoDumpService } from '../rezo-dump/rezo-dump.service';
 })
 export class BreadcrumbComponent implements OnInit {
 
-	historiqueTermes : Array<string>
+	historiqueTermes;
 
 	constructor(
 		private relationsService : RelationsService,
@@ -18,13 +18,14 @@ export class BreadcrumbComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.relationsService.historiqueTermesSubject.subscribe(historique => {
+			console.log(historique);
 			this.historiqueTermes = historique;
 		});
 	}
 
 	requestRelations(terme: string, indice: number): void {
 		//this.relationsService.addToHistoriqueTermes(terme);
-		this.rezoDumpService.requestRelations(terme, this.relationsService.getTypeRelation()).then(() => {
+		this.rezoDumpService.requestRelations(terme, this.relationsService.getTypeRelation().id).then(() => {
 			this.relationsService.sliceHistoriqueTermes(indice);
 		});
 	}

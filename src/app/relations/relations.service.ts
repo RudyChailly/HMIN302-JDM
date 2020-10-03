@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { typeRelations, getRelationById } from '../relations/relations.variables';
 
 @Injectable({
 	providedIn: 'root'
@@ -8,11 +9,11 @@ export class RelationsService {
 
 	terme : string = "";
 	termeSubject = new Subject<string>();
-	typeRelation : number = 5;
+	typeRelation = getRelationById(5);
 	relations;
 	relationsSubject = new Subject<any>();
-	historiqueTermes = new Array<string>();
-	historiqueTermesSubject = new Subject<Array<string>>();
+	historiqueTermes = new Array<any>();
+	historiqueTermesSubject = new Subject<Array<any>>();
 	
 	constructor() { }
 
@@ -27,11 +28,11 @@ export class RelationsService {
 	}
 
 	/******************** TYPE RELATION ********************/
-	setTypeRelation(typeRelation: number) {
+	setTypeRelation(typeRelation) {
 		this.typeRelation = typeRelation;
 	}
 
-	getTypeRelation(): number {
+	getTypeRelation() {
 		return this.typeRelation;
 	}
 
@@ -48,13 +49,16 @@ export class RelationsService {
 	/******************** HISTORIQUE ********************/
 	setHistoriqueTermes(historiqueTermes) {
 		this.historiqueTermes = historiqueTermes;
-		this.terme = this.historiqueTermes[this.historiqueTermes.length-1];
+		this.terme = this.historiqueTermes[this.historiqueTermes.length-1].terme;
 		this.historiqueTermesSubject.next(this.historiqueTermes);
 	}
 
 	addToHistoriqueTermes(terme : string) {
 		this.terme = terme;
-		this.historiqueTermes.push(terme);
+		if (this.historiqueTermes.length > 0) {
+			this.historiqueTermes[this.historiqueTermes.length-1].relation = this.typeRelation.short;
+		}
+		this.historiqueTermes.push({"terme": terme, "relation": null});
 		this.historiqueTermesSubject.next(this.historiqueTermes);
 	}
 
@@ -65,7 +69,7 @@ export class RelationsService {
 	sliceHistoriqueTermes(indice: number) {
 		if (indice >= 0) {
 			this.historiqueTermes = this.historiqueTermes.slice(0, indice);
-			this.terme = this.historiqueTermes[this.historiqueTermes.length-1];
+			this.terme = this.historiqueTermes[this.historiqueTermes.length-1].terme;
 			this.historiqueTermesSubject.next(this.historiqueTermes);
 		}
 	}
