@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RelationsService } from '../relations/relations.service';
 import { RezoDumpService } from '../rezo-dump/rezo-dump.service';
+import { BreadcrumbService } from './breadcrumb.service';
 
 @Component({
 	selector: 'app-breadcrumb',
@@ -9,25 +10,25 @@ import { RezoDumpService } from '../rezo-dump/rezo-dump.service';
 })
 export class BreadcrumbComponent implements OnInit {
 
-	historiqueTermes;
+	historique;
 
 	constructor(
-		private relationsService : RelationsService,
-		private rezoDumpService : RezoDumpService
+		private relationsService: RelationsService,
+		private rezoDumpService: RezoDumpService,
+		private breadcrumbService: BreadcrumbService
 	) { }
 
 	ngOnInit(): void {
-		this.relationsService.historiqueTermesSubject.subscribe(historique => {
-			console.log(historique);
-			this.historiqueTermes = historique;
+		this.breadcrumbService.historiqueSubject.subscribe(historique => {
+			this.historique = historique;
 		});
 	}
 
-	requestRelations(terme: string, indice: number): void {
-		//this.relationsService.addToHistoriqueTermes(terme);
-		this.rezoDumpService.requestRelations(terme, this.relationsService.getTypeRelation().id).then(() => {
-			this.relationsService.sliceHistoriqueTermes(indice);
-		});
+	select(terme: string, indice: number) {
+		if (indice >= 0) {
+			this.breadcrumbService.slice(indice);
+			this.relationsService.requestRelations(terme);
+		}
 	}
 
 }

@@ -1,0 +1,22 @@
+.show-relations-filters-raffinement:hover {
+	cursor: pointer;
+	background-color: #343a40 !important;
+	color: white !important;
+}
+
+.show-relations-filters-raffinement-selectionne {
+	background-color: #343a40 !important;
+	color: white !important;
+}
+
+.btn-outline-dark {
+	background-color: white;
+}
+
+.btn-dark:hover {
+	background-color: #343a40;
+}
+
+.btn-outline-dark:hover {
+	background-color: #343a40;
+}

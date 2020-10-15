@@ -1,23 +1,37 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
-import { typeRelations, getRelationById } from '../relations/relations.variables';
 
+import { StorageService } from "./storage/storage.service";
+import { RezoDumpService } from "../rezo-dump/rezo-dump.service";
+import { ShowRelationsService } from "../show-relations/show-relations/show-relations.service"
+import { typeRelations, getRelationById } from '../relations/relations.variables';
+import { serverURL } from '../app.config';
+
+const httpOptions = {
+	headers: new HttpHeaders ({
+		"Access-Control-Allow-Methods": "GET,POST",
+		"Access-Control-Allow-Headers": "Content-type",
+		"Content-Type": "application/json",
+		"Access-Control-Allow-Origin": "*",
+	})
+}
 @Injectable({
 	providedIn: 'root'
 })
 export class RelationsService {
 
-	terme : string = "";
-	termeSubject = new Subject<string>();
-	typeRelation = getRelationById(5);
-	relations;
-	relationsSubject = new Subject<any>();
-	historiqueTermes = new Array<any>();
-	historiqueTermesSubject = new Subject<Array<any>>();
-	
-	constructor() { }
+	constructor(
+		private http: HttpClient,
+		private storageService: StorageService,
+		private rezoDumpService: RezoDumpService,
+		private showRelationsService: ShowRelationsService
+		) { }
 
 	/******************** TERME ********************/
+	terme : string = "";
+	termeSubject = new Subject<string>();
+
 	setTerme(terme: string) {
 		this.terme = terme;
 		this.termeSubject.next(terme);
@@ -28,8 +42,10 @@ export class RelationsService {
 	}
 
 	/******************** TYPE RELATION ********************/
-	setTypeRelation(typeRelation) {
-		this.typeRelation = typeRelation;
+	typeRelation = getRelationById(5);
+
+	setTypeRelation(typeRelation: number) {
+		this.typeRelation = getRelationById(typeRelation);
 	}
 
 	getTypeRelation() {
@@ -37,40 +53,83 @@ export class RelationsService {
 	}
 
 	/******************** RELATIONS ********************/
+	relations = {};
+
 	setRelations(relations) {
 		this.relations = relations;
-		this.relationsSubject.next(relations);
 	}
 
 	getRelations() {
 		return this.relations;
 	}
 
-	/******************** HISTORIQUE ********************/
-	setHistoriqueTermes(historiqueTermes) {
-		this.historiqueTermes = historiqueTermes;
-		this.terme = this.historiqueTermes[this.historiqueTermes.length-1].terme;
-		this.historiqueTermesSubject.next(this.historiqueTermes);
-	}
-
-	addToHistoriqueTermes(terme : string) {
-		this.terme = terme;
-		if (this.historiqueTermes.length > 0) {
-			this.historiqueTermes[this.historiqueTermes.length-1].relation = this.typeRelation.short;
+	requestRelations(terme: string, refreshRaffinement = true): Promise<any> {
+		let typeRelation = this.typeRelation.id;
+		console.log(terme + " | " + typeRelation)
+		if (this.getTerme() == terme) {
+			if (this.getRelations()[typeRelation] != null) {
+				let relations = this.getRelations();
+				if (refreshRaffinement) {
+					this.showRelationsService.setRaffinements(relations["1"]);
+				}
+				this.setTerme(terme);
+				this.setRelations(relations);
+				this.showRelationsService.setRelations(relations[typeRelation]);
+				return new Promise(resolve => resolve(relations));
+			}
+			else {
+				return new Promise(resolve => {
+					this.requestRelationsType(terme, typeRelation).then(relations => {
+						if (refreshRaffinement) {
+							this.showRelationsService.setRaffinements(relations["1"]);
+						}
+						this.setTerme(terme);
+						this.setRelations(relations);
+						this.showRelationsService.setRelations(relations[typeRelation]);
+						resolve(relations);
+					});
+				});
+			}
 		}
-		this.historiqueTermes.push({"terme": terme, "relation": null});
-		this.historiqueTermesSubject.next(this.historiqueTermes);
+		else {
+			return new Promise(resolve => {
+				this.requestRelationsType(terme, 1).then(relations1 => {
+					if (refreshRaffinement) {
+						this.showRelationsService.setRaffinements(relations1["1"]);
+					}
+					this.requestRelationsType(terme, typeRelation, relations1).then(relations => {
+						this.setTerme(terme);
+						this.setRelations(relations);
+						this.showRelationsService.setRelations(relations[typeRelation]);
+						resolve(relations);
+					});
+				});
+			});
+		}
 	}
 
-	getHistoriqueTermes() {
-		return this.historiqueTermes;
-	}
-
-	sliceHistoriqueTermes(indice: number) {
-		if (indice >= 0) {
-			this.historiqueTermes = this.historiqueTermes.slice(0, indice);
-			this.terme = this.historiqueTermes[this.historiqueTermes.length-1].terme;
-			this.historiqueTermesSubject.next(this.historiqueTermes);
+	private requestRelationsType(terme: string, typeRelation: number, relations = null): Promise<any> {
+		let storageRelations = this.storageService.load(terme);
+		if (storageRelations != null) {
+			if (storageRelations[typeRelation] != null) {
+				return new Promise(resolve => resolve(storageRelations));
+			}
+			else {
+				if (this.getTerme() == terme) {
+					return this.rezoDumpService.requestRelations(terme, typeRelation, storageRelations);
+				}
+				else {
+					return this.rezoDumpService.requestRelations(terme, typeRelation);
+				}
+			}
+		}
+		else {
+			if (this.getTerme() == terme) {
+				return this.rezoDumpService.requestRelations(terme, typeRelation, relations);
+			}
+			else {
+				return this.rezoDumpService.requestRelations(terme, typeRelation);
+			}
 		}
 	}
 

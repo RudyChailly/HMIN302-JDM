@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { RezoDumpService } from '../../rezo-dump/rezo-dump.service';
 import { RelationsService } from '../../relations/relations.service';
+import { ShowRelationsService } from '../show-relations/show-relations.service'
 import { typeRelations, getRelationById } from '../../relations/relations.variables';
 import $ from "jquery";
 
@@ -13,13 +14,14 @@ import $ from "jquery";
 export class ShowRelationsFiltersComponent implements OnInit {
 
 	showRelationsFiltersForm : FormGroup
-
 	typeRelations;
+	raffinements: Array<string> = [];
 
 	constructor(
 		private formBuilder: FormBuilder,
 		private rezoDumpService : RezoDumpService,
-		private relationsService : RelationsService
+		private relationsService : RelationsService,
+		private showRelationsService: ShowRelationsService
 	) { }
 
 	ngOnInit(): void {
@@ -27,29 +29,50 @@ export class ShowRelationsFiltersComponent implements OnInit {
 		this.showRelationsFiltersForm = this.formBuilder.group({
 			relation: 5
 		});
+		/* Boutons de tri */
 		let showRelationsFiltersTriAlpha = $("#show-relations-filters-tri-alpha");
 		let showRelationsFiltersTriPoids = $("#show-relations-filters-tri-poids");
 		showRelationsFiltersTriAlpha.click(function() {
-			showRelationsFiltersTriPoids.removeClass("btn-secondary");
-			showRelationsFiltersTriPoids.addClass("btn-outline-secondary");
-			$(this).addClass("btn-secondary");
-			$(this).removeClass("btn-outline-secondary");
+			showRelationsFiltersTriPoids.removeClass("btn-dark");
+			showRelationsFiltersTriPoids.addClass("btn-outline-dark");
+			$(this).addClass("btn-dark");
+			$(this).removeClass("btn-outline-dark");
 		});
 		showRelationsFiltersTriPoids.click(function() {
-			showRelationsFiltersTriAlpha.removeClass("btn-secondary");
-			showRelationsFiltersTriAlpha.addClass("btn-outline-secondary");
-			$(this).addClass("btn-secondary");
-			$(this).removeClass("btn-outline-secondary");
+			showRelationsFiltersTriAlpha.removeClass("btn-dark");
+			showRelationsFiltersTriAlpha.addClass("btn-outline-dark");
+			$(this).addClass("btn-dark");
+			$(this).removeClass("btn-outline-dark");
 		});
 
-
 		this.onChanges();
+		this.showRelationsService.raffinementsSubject.subscribe(raffinements => {
+			this.raffinements = raffinements;
+		});
 	}
 
 	onChanges() {
 		this.showRelationsFiltersForm.get("relation").valueChanges.subscribe(id => {
-			this.rezoDumpService.requestRelations(this.relationsService.getTerme(), id);
+			this.relationsService.setTypeRelation(id);
+			let terme = this.relationsService.getTerme();
+			this.relationsService.requestRelations(terme,false);
 		});
 	}
 
+	requestRelations(id, terme: string) {
+		let raffinement = $("#show-relations-filters-raffinement-"+id);
+		if (raffinement.hasClass("show-relations-filters-raffinement-selectionne")) {
+			$(".show-relations-filters-raffinement").each(function() {
+				$(this).removeClass("show-relations-filters-raffinement-selectionne")
+			});
+			this.relationsService.requestRelations(terme.split(">")[0], false);
+		}
+		else {
+			$(".show-relations-filters-raffinement").each(function() {
+				$(this).removeClass("show-relations-filters-raffinement-selectionne")
+			});
+			$("#show-relations-filters-raffinement-"+id).addClass("show-relations-filters-raffinement-selectionne");
+			this.relationsService.requestRelations(terme, false);
+		}
+	}
 }

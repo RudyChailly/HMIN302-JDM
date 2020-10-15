@@ -23,7 +23,7 @@ MongoClient.connect(url,{useNewUrlParser: true, useUnifiedTopology: true},(err,c
 			termes.push(decodeURI(element["t"]));
 		});
 		termes = stringArraySort(termes);
-		console.log("Termes chargés.")
+		console.log("Serveur prêt.")
 	});
 
 	app.get("/autocomplete/:terme", (req,res) => {
@@ -35,13 +35,24 @@ MongoClient.connect(url,{useNewUrlParser: true, useUnifiedTopology: true},(err,c
 		res.end(JSON.stringify(result));
 	});
 
+	app.get("/raffinements/:terme", (req, res) => {
+		let terme = decodeURIComponent(req.params.terme);
+		let result;
+		result = termes.filter(function(element) {
+			return element.startsWith(terme+">") && !(element.includes(encodeURIComponent(":")));
+		}).map(function(element) {
+			return element.split(terme+">")[1]
+		}).sort();
+		res.end(JSON.stringify(result));
+	});
+
 	app.get("/rezo-dump/:terme", (req, res) => {
 		let terme = decodeURIComponent(req.params.terme);
 		request({encoding: null, uri: "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel="+terme+"&rel="}, 
 			function(error, response, source_code) {
 				if (source_code) {
 					let utf8 = iconv.decode(new Buffer(source_code), "ISO-8859-1");
-					res.end(JSON.stringify({'text': utf8}));
+					res.end(JSON.stringify({'text': utf8, 'cache': false}));
 				}
 				else {
 					res.end(JSON.stringify([]));
@@ -50,26 +61,79 @@ MongoClient.connect(url,{useNewUrlParser: true, useUnifiedTopology: true},(err,c
 			);
 	});
 
+	app.get('/testCache', (req, res) => {
+		db.collection("cacheRelations").find().toArray((err, documents) => {
+			res.end(JSON.stringify(documents));
+		});
+	});
+
 	app.get('/rezo-dump/:terme/:typeRelation', (req,res) => {
 		let terme = req.params.terme;
 		let typeRelation = req.params.typeRelation;
-		request({encoding: null, uri: "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel="+terme+"&rel="+typeRelation+"&relin=norelin"}, 
-			function(error, response, source_code) {
-				if (source_code) {
-					let utf8 = iconv.decode(new Buffer(source_code), "ISO-8859-1");
-					res.end(JSON.stringify({'text': utf8}));
+		db.collection("cacheRelations").find({"t": terme}).toArray((err, documents) => {
+			// Des relations du mot sont stockees en cache
+			if (documents.length > 0) {
+				let relations = documents[0];
+				// La relation du mot est stockee en cache
+				if (relations[typeRelation] != undefined) {
+					res.end(JSON.stringify({'text': null, 'cache': JSON.stringify(relations)}));
 				}
+				// La relation du mot n'est pas stockee en cache
 				else {
-					res.end(JSON.stringify([]));
+					request({encoding: null, uri: "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel="+terme+"&rel="+typeRelation+"&relin=norelin"}, 
+						function(error, response, sourceCode) {
+							if (sourceCode) {
+								let sourceCodeEncoded = iconv.decode(new Buffer(sourceCode), "ISO-8859-1");
+								res.end(JSON.stringify({'text': sourceCodeEncoded, 'cache': JSON.stringify(relations)}));
+							}
+							else {
+								res.end(JSON.stringify({'text': null, 'cache': JSON.stringify(relations)}));
+							}
+						});
 				}
 			}
-			);
+			else {
+				request({encoding: null, uri: "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel="+terme+"&rel="+typeRelation+"&relin=norelin"}, 
+					function(error, response, sourceCode) {
+						if (sourceCode) {
+							let sourceCodeEncoded = iconv.decode(new Buffer(sourceCode), "ISO-8859-1");
+							res.end(JSON.stringify({'text': sourceCodeEncoded, 'cache': null}));
+						}
+						else {
+							res.end(JSON.stringify([]));
+						}
+					}
+				);
+			}
+		});
+	});
+
+	app.post("/save", (req, res) => {
+		let terme = req.body.terme;
+		let typeRelation = req.body.typeRelation;
+		let relations = req.body.relations;
+		db.collection('cacheRelations').find({"t": terme}).toArray((err, documents) => {
+			if (documents.length > 0) {
+				let update = {$set: {"d": Date.now()}}
+				update.$set[typeRelation] = relations
+				db.collection('cacheRelations').updateOne(
+					{"t": terme},
+					update
+					);
+			}
+			else {
+				let new_relations = {"t": terme, "d": Date.now()};
+				new_relations[typeRelation] = relations;
+				db.collection('cacheRelations').insertOne(new_relations);
+			}
+		});
 	});
 
 });
 
 app.listen(8888);
 
+/*********************** LEXICAL SORT ***********************/
 function stringArraySort(array) {
 	let arraySorted, arrayTemp;
 	arraySorted = [];
@@ -96,7 +160,6 @@ function stringArraySort(array) {
 	});
 	return arraySorted;
 }
-
 function nbSpaces(array, nbSpaces) {
 	let result = array.filter(function(element) {
 		return element['n'] == nbSpaces;

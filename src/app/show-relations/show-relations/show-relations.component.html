@@ -1,0 +1,13 @@
+<div class="container my-4">
+	<!-- [ngClass]="{'invisible' : relationsAffichees == null} -->
+	<h2 id="show-relations-terme" class="font-weight-bold mb-3"> {{terme}} </h2>
+	<app-breadcrumb> </app-breadcrumb>
+	<app-show-relations-filters> </app-show-relations-filters>
+	<div class="show-relations-result bg-white border d-flex flex-wrap"> 
+		<div *ngFor="let relation of relations" class="show-relations-result-item col-2 d-flex flex-column justify-content-center text-center py-3" (click)="requestRelations(relation.t)"> 
+			<div> {{relation.t}} </div>
+			<div> ({{relation.p}}) </div>
+		</div>
+	</div>
+</div>
+
