@@ -8,14 +8,19 @@ export class ShowRelationsService {
 
 	relationsSubject = new Subject<Array<string>>();
 	raffinementsSubject = new Subject<Array<string>>();
+  triSubject = new Subject<number>();
 
-  	constructor() { }
+  constructor() { }
 
-  	setRelations(relations) {
-  		this.relationsSubject.next(relations);
-  	}
+  setRelations(relations) {
+    this.relationsSubject.next(relations);
+  }
 
-  	setRaffinements(raffinements) {
-  		this.raffinementsSubject.next(raffinements);
-  	}
+  setRaffinements(raffinements) {
+    this.raffinementsSubject.next(raffinements);
+  }
+
+  setTri(tri: number) {
+    this.triSubject.next(tri);
+  }
 }

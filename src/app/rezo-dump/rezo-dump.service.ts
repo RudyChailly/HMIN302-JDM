@@ -44,8 +44,8 @@ export class RezoDumpService {
 			}
 			if (typeRelation == 1) {
 				relations["1"].forEach(relation => {
-					/* s = splited */
-					relation['s'] = relation['t'].split(terme+">")[1];
+					/* f = formatted */
+					relation['f'] = relation['t'].split(terme+">")[1];
 				});
 			}
 			if (relations[typeRelation] != null) {
@@ -126,9 +126,11 @@ export class RezoDumpService {
 		let elems = line.split(";");
 		if (elems[4] == typeRelation) {
 			if (elems[2] == idTerme) {
-				if (mots[elems[3]] != undefined && parseInt(elems[5]) > 20) {
-					if (typeRelation == 1 || (typeRelation != 1 && !(mots[elems[3]].includes(">")))) {
-						return {"t" : mots[elems[3]], "p": elems[5]};
+				let terme = mots[elems[3]];
+				let poids = elems[5];
+				if (terme != undefined && parseInt(poids) > 20) {
+					if ((typeRelation == 1 && terme.split(">").length <= 2) || (typeRelation != 1 && !(terme.includes(">")))) {
+						return {"t" : terme, "p": poids};
 					}
 				}
 			}

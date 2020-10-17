@@ -18,21 +18,19 @@ app.use(function(req,res,next){
 MongoClient.connect(url,{useNewUrlParser: true, useUnifiedTopology: true},(err,client) => {
 	let db = client.db("MOTS");
 	let termes = [];
-	db.collection("termes").find().toArray((err, documents) => {
+	/*db.collection("termes").find().toArray((err, documents) => {
 		documents.forEach(element => {
 			termes.push(decodeURI(element["t"]));
 		});
 		termes = stringArraySort(termes);
 		console.log("Serveur prêt.")
-	});
+	});*/
 
 	app.get("/autocomplete/:terme", (req,res) => {
-		let terme = decodeURIComponent(req.params.terme);
-		let result = termes.filter(function(element) {
-			return element.startsWith(terme);
-		}).slice(0,5);
-
-		res.end(JSON.stringify(result));
+		let terme = encodeURIComponent(req.params.terme);
+		db.collection("termes").find({"t": new RegExp("^"+terme,'i')}).limit(5).toArray((err, documents) => {
+			res.end(JSON.stringify(documents));
+		});
 	});
 
 	app.get("/raffinements/:terme", (req, res) => {
@@ -132,6 +130,7 @@ MongoClient.connect(url,{useNewUrlParser: true, useUnifiedTopology: true},(err,c
 });
 
 app.listen(8888);
+console.log("Serveur prêt.")
 
 /*********************** LEXICAL SORT ***********************/
 function stringArraySort(array) {

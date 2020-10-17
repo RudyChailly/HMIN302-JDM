@@ -1,8 +1,8 @@
 <form [formGroup]="showRelationsFiltersForm" class="row" autocomplete="off">
 	<div *ngIf="raffinements.length > 0" class="form-group col-12">
 		<label for="show-relations-filters-raffinements" class="font-weight-bold"> RAFFINEMENTS </label>
-		<div class="border-top border-left d-flex flex-wrap bg-white">
-			<div *ngFor="let raffinement of raffinements; let i = index" id="show-relations-filters-raffinement-{{i}}" class="show-relations-filters-raffinement justify-content-center text-center py-1 px-1 col-2 border-right border-bottom" (click)="requestRelations(i, raffinement.t)"> {{raffinement.s }} </div>
+		<div [ngClass]="{'border-top' : raffinements.length >= 6}" class="border-left d-flex flex-wrap ">
+			<div *ngFor="let raffinement of raffinements; let i = index" id="show-relations-filters-raffinement-{{i}}" [ngClass]="{'border-top' : raffinements.length < 6}" class="show-relations-filters-raffinement d-flex flex-column justify-content-center text-center py-1 px-1 col-2 border-right border-bottom bg-white" (click)="requestRelations(i, raffinement.t)"> {{raffinement.f }} </div>
 		</div>
 	</div>
 
@@ -21,10 +21,10 @@
 				<i id="show-relations-filters-tri-order" class="icon-up-big"> </i> 
 			</div> -->
 			<div class="btn-group" role="group">
-				<button id="show-relations-filters-tri-alpha" type="button" class="w-50 btn btn-outline-dark">
+				<button id="show-relations-filters-tri-alpha" type="button" class="w-50 btn btn-outline-dark" (click)="tri(1)">
 					Alphabétique
 				</button>
-				<button id="show-relations-filters-tri-poids" type="button" class="w-50 btn btn-dark">
+				<button id="show-relations-filters-tri-poids" type="button" class="w-50 btn btn-dark" (click)="tri(0)">
 					Poids
 				</button>
 			</div>

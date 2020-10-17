@@ -25,7 +25,9 @@ export class AutocompleteService {
 	autocompletion(saisie: string) {
 		this.resetSuggestions();
 		return new Promise(resolve => this.http.get(serverURL +'/autocomplete/'+encodeURIComponent(saisie)).subscribe(termes => {
-			this.suggestionsSubject.next(termes);
+			let suggestions = [];
+			Object(termes).forEach(terme => {suggestions.push(decodeURIComponent(terme.t))});
+			this.suggestionsSubject.next(suggestions);
 		}));
 	}
 

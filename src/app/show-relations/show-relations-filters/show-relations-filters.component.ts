@@ -4,6 +4,7 @@ import { RezoDumpService } from '../../rezo-dump/rezo-dump.service';
 import { RelationsService } from '../../relations/relations.service';
 import { ShowRelationsService } from '../show-relations/show-relations.service'
 import { typeRelations, getRelationById } from '../../relations/relations.variables';
+import * as SORT from './sort.variables';
 import $ from "jquery";
 
 @Component({
@@ -29,22 +30,7 @@ export class ShowRelationsFiltersComponent implements OnInit {
 		this.showRelationsFiltersForm = this.formBuilder.group({
 			relation: 5
 		});
-		/* Boutons de tri */
-		let showRelationsFiltersTriAlpha = $("#show-relations-filters-tri-alpha");
-		let showRelationsFiltersTriPoids = $("#show-relations-filters-tri-poids");
-		showRelationsFiltersTriAlpha.click(function() {
-			showRelationsFiltersTriPoids.removeClass("btn-dark");
-			showRelationsFiltersTriPoids.addClass("btn-outline-dark");
-			$(this).addClass("btn-dark");
-			$(this).removeClass("btn-outline-dark");
-		});
-		showRelationsFiltersTriPoids.click(function() {
-			showRelationsFiltersTriAlpha.removeClass("btn-dark");
-			showRelationsFiltersTriAlpha.addClass("btn-outline-dark");
-			$(this).addClass("btn-dark");
-			$(this).removeClass("btn-outline-dark");
-		});
-
+		this.initBoutonsTri();
 		this.onChanges();
 		this.showRelationsService.raffinementsSubject.subscribe(raffinements => {
 			this.raffinements = raffinements;
@@ -57,6 +43,29 @@ export class ShowRelationsFiltersComponent implements OnInit {
 			let terme = this.relationsService.getTerme();
 			this.relationsService.requestRelations(terme,false);
 		});
+	}
+
+	initBoutonsTri() {
+		/* Boutons de tri */
+		let showRelationsFiltersTriAlpha = $("#show-relations-filters-tri-alpha");
+		let showRelationsFiltersTriPoids = $("#show-relations-filters-tri-poids");
+		showRelationsFiltersTriAlpha.click(function() {
+			showRelationsFiltersTriPoids.removeClass("btn-dark");
+			showRelationsFiltersTriPoids.addClass("btn-outline-dark");
+			$(this).addClass("btn-dark");
+			$(this).removeClass("btn-outline-dark");
+			
+		});
+		showRelationsFiltersTriPoids.click(function() {
+			showRelationsFiltersTriAlpha.removeClass("btn-dark");
+			showRelationsFiltersTriAlpha.addClass("btn-outline-dark");
+			$(this).addClass("btn-dark");
+			$(this).removeClass("btn-outline-dark");
+		});
+	}
+
+	tri(tri: number) {
+		this.showRelationsService.setTri(tri);
 	}
 
 	requestRelations(id, terme: string) {
