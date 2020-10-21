@@ -24,7 +24,7 @@ export class BreadcrumbService {
 			this.historique[this.historique.length-1].r = this.relationsService.getTypeRelation().short;
 		}
 		this.historique.push({"t": terme, "r": null});
-		if (this.historique.length > 7) {
+		if (this.historique.length > 5) {
 			this.setHistorique(this.historique.slice(1));
 		}
 		this.historiqueSubject.next(this.historique);
