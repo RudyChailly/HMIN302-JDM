@@ -65,12 +65,19 @@ export class RelationsService {
 
 	requestRelations(terme: string, refreshRaffinement = true): Promise<any> {
 		let typeRelation = this.typeRelation.id;
-		console.log(terme + " | " + typeRelation)
+		//console.log(terme + " | " + typeRelation)
 		if (this.getTerme() == terme) {
 			if (this.getRelations()[typeRelation] != null) {
 				let relations = this.getRelations();
 				if (refreshRaffinement) {
-					this.showRelationsService.setRaffinements(relations["1"]);
+					if (relations["1"] == null) {
+						this.requestRelationsType(terme, 1, relations).then(raffinements => {
+							this.showRelationsService.setRaffinements(raffinements["1"]);
+						});
+					}
+					else {
+						this.showRelationsService.setRaffinements(relations["1"]);
+					}
 				}
 				this.setTerme(terme);
 				this.setRelations(relations);

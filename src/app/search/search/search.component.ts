@@ -17,7 +17,7 @@ import $ from "jquery";
 })
 export class SearchComponent implements OnInit {
 
-	saisie: string;
+	saisie: string = "";
 	searchForm: FormGroup;
 	suggestionsTermes = [];
 
@@ -29,7 +29,7 @@ export class SearchComponent implements OnInit {
 		private storageService: StorageService,
 		private searchService: SearchService,
 		private breadcrumbService: BreadcrumbService
-	) { }
+		) { }
 
 	ngOnInit(): void {
 		this.searchForm = this.formBuilder.group({
@@ -42,13 +42,30 @@ export class SearchComponent implements OnInit {
 		this.onChanges();
 	}
 
+	focusout() {
+		this.autocompleteService.resetSuggestions();
+	}
+
+	focusin() {
+		if (this.saisie.length > 2) {
+			this.autocompleteService.autocompletion(this.saisie);
+		}
+	}
+
 	onChanges() {
 		this.searchForm.get('terme').valueChanges.subscribe(saisie => {
 			this.saisie = saisie;
-			if (saisie.length > 2) {
-				this.autocompleteService.autocompletion(saisie);
+			if (saisie.length > 0) {
+				$("#search-form-button-search").removeClass("disabled");
+				if (saisie.length > 2) {
+					this.autocompleteService.autocompletion(saisie);
+				}
+				else {
+					this.autocompleteService.resetSuggestions();
+				}
 			}
 			else {
+				$("#search-form-button-search").addClass("disabled");
 				this.autocompleteService.resetSuggestions();
 			}
 		});
@@ -60,14 +77,12 @@ export class SearchComponent implements OnInit {
 
 	search() {
 		let terme = this.saisie;
-		this.relationsService.requestRelations(terme).then(relations => {
-			this.breadcrumbService.reset();
-			this.breadcrumbService.add(terme);
-			console.log(relations);
-		});
-		/*
-		this.relationsService.setHistoriqueTermes([{"terme": terme, "relation": null}]);
-		this.relationsService.setTerme(terme);*/
+		if (terme != "") {
+			this.relationsService.requestRelations(terme).then(relations => {
+				this.breadcrumbService.reset();
+				this.breadcrumbService.add(terme);
+			});
+		}
 	}
 
 }

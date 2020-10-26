@@ -49,8 +49,8 @@ export class RezoDumpService {
 				});
 			}
 			if (relations[typeRelation] != null) {
+				//this.storageService.saveServer(terme, typeRelation, relations[typeRelation]).subscribe();
 				this.storageService.saveLocal(terme, typeRelation, relations[typeRelation]);
-				this.storageService.saveServer(terme, typeRelation, relations[typeRelation]);
 			}
 			resolve(relations);
 		}));

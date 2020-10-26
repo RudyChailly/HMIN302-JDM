@@ -49,7 +49,7 @@ MongoClient.connect(url,{useNewUrlParser: true, useUnifiedTopology: true},(err,c
 		request({encoding: null, uri: "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel="+terme+"&rel="}, 
 			function(error, response, source_code) {
 				if (source_code) {
-					let utf8 = iconv.decode(new Buffer(source_code), "ISO-8859-1");
+					let utf8 = iconv.decode(new Buffer.from(source_code), "ISO-8859-1");
 					res.end(JSON.stringify({'text': utf8, 'cache': false}));
 				}
 				else {
@@ -59,7 +59,7 @@ MongoClient.connect(url,{useNewUrlParser: true, useUnifiedTopology: true},(err,c
 			);
 	});
 
-	app.get('/testCache', (req, res) => {
+	app.get('/cache', (req, res) => {
 		db.collection("cacheRelations").find().toArray((err, documents) => {
 			res.end(JSON.stringify(documents));
 		});
@@ -81,7 +81,7 @@ MongoClient.connect(url,{useNewUrlParser: true, useUnifiedTopology: true},(err,c
 					request({encoding: null, uri: "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel="+terme+"&rel="+typeRelation+"&relin=norelin"}, 
 						function(error, response, sourceCode) {
 							if (sourceCode) {
-								let sourceCodeEncoded = iconv.decode(new Buffer(sourceCode), "ISO-8859-1");
+								let sourceCodeEncoded = iconv.decode(new Buffer.from(sourceCode), "ISO-8859-1");
 								res.end(JSON.stringify({'text': sourceCodeEncoded, 'cache': JSON.stringify(relations)}));
 							}
 							else {
@@ -94,7 +94,7 @@ MongoClient.connect(url,{useNewUrlParser: true, useUnifiedTopology: true},(err,c
 				request({encoding: null, uri: "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel="+terme+"&rel="+typeRelation+"&relin=norelin"}, 
 					function(error, response, sourceCode) {
 						if (sourceCode) {
-							let sourceCodeEncoded = iconv.decode(new Buffer(sourceCode), "ISO-8859-1");
+							let sourceCodeEncoded = iconv.decode(new Buffer.from(sourceCode), "ISO-8859-1");
 							res.end(JSON.stringify({'text': sourceCodeEncoded, 'cache': null}));
 						}
 						else {
@@ -112,17 +112,23 @@ MongoClient.connect(url,{useNewUrlParser: true, useUnifiedTopology: true},(err,c
 		let relations = req.body.relations;
 		db.collection('cacheRelations').find({"t": terme}).toArray((err, documents) => {
 			if (documents.length > 0) {
-				let update = {$set: {"d": Date.now()}}
-				update.$set[typeRelation] = relations
+				let realtionsStorage = documents[0];
+				let update = {"$set": {"d": Date.now()}}
+				update["$set"][typeRelation] = relations;
 				db.collection('cacheRelations').updateOne(
 					{"t": terme},
-					update
-					);
+					{
+						"$set": {
+							"d": Date.now(),
+							typeRelation
+						}
+					}
+				);
 			}
 			else {
 				let new_relations = {"t": terme, "d": Date.now()};
-				new_relations[typeRelation] = relations;
-				db.collection('cacheRelations').insertOne(new_relations);
+				new_relations[typeRelation] = JSON.stringify(relations);
+				db.collection('cacheRelations').insert(new_relations);
 			}
 		});
 	});

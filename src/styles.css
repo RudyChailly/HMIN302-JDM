@@ -1,6 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+html {
+    overflow-y: scroll !important;
+ }
 
 body {
 	background-color: #f2f2f2 !important;
-	overflow-y: scroll;
 }
