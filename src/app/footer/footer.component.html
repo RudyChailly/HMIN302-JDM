@@ -1,3 +1,6 @@
-<footer class="footer text-center text-danger border-top py-2">
-	<i class="icon-trash"> </i> Supprimer le cache
+<footer class="footer  border-top py-2 d-flex flex-row justify-content-around" >
+	<div class="cursor-pointer text-secondary" (click)="printLocal()"> <i class="icon-doc-text-inv"> 
+		</i> Afficher le cache dans la console 
+	</div>
+	<div class="cursor-pointer text-danger " (click)="cleanLocal()"> <i class="icon-trash" > </i> Supprimer le cache </div>
 </footer>

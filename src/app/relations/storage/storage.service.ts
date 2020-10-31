@@ -22,9 +22,8 @@ export class StorageService {
 
   constructor(
     private http: HttpClient
-    ) {
-  	this.cleanLocal();
-  }
+    ) 
+  {}
 
   load(terme: string) {
   	let relationsStorage = this.getRelations();
@@ -122,7 +121,7 @@ export class StorageService {
     return null;
   }
 
-  private getRelations() {
+  getRelations() {
     return JSON.parse(localStorage.getItem(CACHE_RELATIONS));
   }
 

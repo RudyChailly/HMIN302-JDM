@@ -4,5 +4,6 @@
 .icon-help-circled:before { content: '\e704'; } /* '' */
 .icon-down-open:before { content: '\e75c'; } /* '' */
 .icon-right-open:before { content: '\e75e'; } /* '' */
+.icon-doc-text-inv:before { content: '\f15c'; } /* '' */
 .icon-trash:before { content: '\f1f8'; } /* '' */
 .icon-search:before { content: '🔍'; } /* '\1f50d' */

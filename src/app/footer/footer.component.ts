@@ -15,6 +15,11 @@ export class FooterComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  printLocal() {
+    console.log("CACHE : ")
+    console.log(this.storageService.getRelations());
+  }
+
   cleanLocal() {
   	this.storageService.cleanLocal();
   }
