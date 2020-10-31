@@ -81,7 +81,7 @@ export class RelationsService {
 				}
 				this.setTerme(terme);
 				this.setRelations(relations);
-				this.showRelationsService.setRelations(relations[typeRelation]);
+				this.showRelationsService.setRelations(relations[typeRelation], true);
 				return new Promise(resolve => resolve(relations));
 			}
 			else {
@@ -92,7 +92,7 @@ export class RelationsService {
 						}
 						this.setTerme(terme);
 						this.setRelations(relations);
-						this.showRelationsService.setRelations(relations[typeRelation]);
+						this.showRelationsService.setRelations(relations[typeRelation], true);
 						resolve(relations);
 					});
 				});
@@ -107,7 +107,7 @@ export class RelationsService {
 					this.requestRelationsType(terme, typeRelation, relations1).then(relations => {
 						this.setTerme(terme);
 						this.setRelations(relations);
-						this.showRelationsService.setRelations(relations[typeRelation]);
+						this.showRelationsService.setRelations(relations[typeRelation], true);
 						resolve(relations);
 					});
 				});

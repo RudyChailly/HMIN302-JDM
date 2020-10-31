@@ -2,4 +2,7 @@
 
  
 .icon-help-circled:before { content: '\e704'; } /* '' */
+.icon-down-open:before { content: '\e75c'; } /* '' */
+.icon-right-open:before { content: '\e75e'; } /* '' */
+.icon-angle-double-down:before { content: '\f103'; } /* '' */
 .icon-search:before { content: '🔍'; } /* '\1f50d' */

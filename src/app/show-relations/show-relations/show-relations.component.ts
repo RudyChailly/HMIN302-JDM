@@ -22,6 +22,7 @@ export class ShowRelationsComponent implements OnInit {
 	relations = null;
 	sortValue = SORT.SORT_POIDS;
 	typeRelations;
+	paginationHasMore = false;
 
 	constructor(
 		private relationsService: RelationsService,
@@ -47,6 +48,9 @@ export class ShowRelationsComponent implements OnInit {
 				this.sortValue = sort;
 				this.sort();
 			}
+		});
+		this.showRelationService.paginationSubject.subscribe(hasMore => {
+			this.paginationHasMore = hasMore;
 		});
 	}
 
@@ -75,6 +79,11 @@ export class ShowRelationsComponent implements OnInit {
 			return termeSplitted[0] + " ("+termeSplitted[1]+")";
 		}
 		return terme;
+	}
+
+	getMoreRelations() {
+		this.showRelationService.incrPagination();
+		this.showRelationService.setRelations(this.relationsService.getRelations()[this.typeRelations.id]);
 	}
 
 }

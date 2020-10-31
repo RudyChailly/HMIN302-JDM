@@ -1,17 +1,7 @@
-.show-relations-boutons > div {
-	height: 4rem;
-}
-
-.show-relations-boutons > div > div:hover {
-	cursor: pointer;
-	background-color: #ddd !important;
-}
-
-.show-relations-result {
-	/*height: 25rem;*/
-}
-
 .show-relations-result-item:hover {
-	cursor: pointer;
 	background-color: #ddd !important;
+}
+
+#show-relations-result-button-more:hover {
+	color: #6c757d;
 }

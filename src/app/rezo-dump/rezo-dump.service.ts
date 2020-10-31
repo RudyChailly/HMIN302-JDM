@@ -44,7 +44,7 @@ export class RezoDumpService {
 			}
 			if (typeRelation == 1) {
 				relations["1"].forEach(relation => {
-					/* f = formatted */
+					// f = formatted
 					relation['f'] = relation['t'].split(terme+">")[1];
 				});
 			}
