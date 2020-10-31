@@ -29,7 +29,6 @@ export class ShowRelationsService {
       
     }
     this.relationsSubject.next(relations.slice(0, this.getPagination()));
-    // this.relationsSubject.next(relations);
   }
 
   setRaffinements(raffinements) {
