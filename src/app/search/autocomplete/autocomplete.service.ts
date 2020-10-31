@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { serverURL } from '../../app.config';
+import $ from "jquery";
+
 
 const httpOptions = {
 	headers: new HttpHeaders ({
@@ -37,5 +39,9 @@ export class AutocompleteService {
 
 	resetSuggestions() {
 		this.suggestionsSubject.next([]);
+	}
+
+	hide() {
+		$("#search-form-terme-autocomplete").hide();
 	}
 }

@@ -11,6 +11,7 @@ import { ShowRelationsComponent } from './show-relations/show-relations/show-rel
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { ShowRelationsFiltersComponent } from './show-relations/show-relations-filters/show-relations-filters.component';
 import { AutocompleteComponent } from './search/autocomplete/autocomplete.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { AutocompleteComponent } from './search/autocomplete/autocomplete.compon
     ShowRelationsComponent,
     BreadcrumbComponent,
     ShowRelationsFiltersComponent,
-    AutocompleteComponent
+    AutocompleteComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

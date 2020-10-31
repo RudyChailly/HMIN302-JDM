@@ -7,6 +7,7 @@ import { RezoDumpService } from "../rezo-dump/rezo-dump.service";
 import { ShowRelationsService } from "../show-relations/show-relations/show-relations.service"
 import { typeRelations, getRelationById } from '../relations/relations.variables';
 import { serverURL } from '../app.config';
+import $ from "jquery";
 
 const httpOptions = {
 	headers: new HttpHeaders ({
@@ -35,6 +36,7 @@ export class RelationsService {
 	setTerme(terme: string) {
 		this.terme = terme;
 		this.termeSubject.next(terme);
+		$("html title").html(this.formatTerme(terme) + " - Réseau lexical");
 	}
 
 	getTerme(): string {
@@ -79,7 +81,6 @@ export class RelationsService {
 						this.showRelationsService.setRaffinements(relations["1"]);
 					}
 				}
-				this.setTerme(terme);
 				this.setRelations(relations);
 				this.showRelationsService.setRelations(relations[typeRelation], true);
 				return new Promise(resolve => resolve(relations));
@@ -90,7 +91,6 @@ export class RelationsService {
 						if (refreshRaffinement) {
 							this.showRelationsService.setRaffinements(relations["1"]);
 						}
-						this.setTerme(terme);
 						this.setRelations(relations);
 						this.showRelationsService.setRelations(relations[typeRelation], true);
 						resolve(relations);
@@ -138,6 +138,14 @@ export class RelationsService {
 				return this.rezoDumpService.requestRelations(terme, typeRelation);
 			}
 		}
+	}
+
+	private formatTerme(terme: string) {
+		if (terme.includes(">")) {
+			let termeSplitted = terme.split(">");
+			return termeSplitted[0] + " ("+termeSplitted[1]+")";
+		}
+		return terme;
 	}
 
 }

@@ -43,7 +43,7 @@ export class SearchComponent implements OnInit {
 	}
 
 	focusout() {
-		this.autocompleteService.resetSuggestions();
+		// this.autocompleteService.hide();
 	}
 
 	focusin() {
@@ -79,6 +79,7 @@ export class SearchComponent implements OnInit {
 		let terme = this.saisie;
 		if (terme != "") {
 			this.relationsService.requestRelations(terme).then(relations => {
+				console.log(relations);
 				this.breadcrumbService.reset();
 				this.breadcrumbService.add(terme);
 			});

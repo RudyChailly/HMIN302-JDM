@@ -2,7 +2,7 @@
 	<div *ngIf="raffinements.length > 0" class="form-group col-12">
 		<label for="show-relations-filters-raffinements" class="font-weight-bold d-flex justify-content-between mb-0"> 
 			<span> RAFFINEMENTS </span> 
-			<i class="icon-help-circled"> </i> 
+			<i class="icon-help-circled" data-toggle="modal" data-target="#raffinementsInfosModal"> </i> 
 		</label>
 		<div [ngClass]="{'border-top' : raffinements.length >= 6}" class="border-left d-flex flex-wrap ">
 			<div *ngFor="let raffinement of raffinements; let i = index" id="show-relations-filters-raffinement-{{i}}" [ngClass]="{'border-top' : raffinements.length < 6}" class="show-relations-filters-raffinement d-flex flex-column justify-content-center text-center py-1 px-1 col-lg-2 col-md-4 col-6 border-right border-bottom bg-white cursor-pointer" (click)="requestRelations(i, raffinement.t)"> {{raffinement.f }} </div>
@@ -20,18 +20,43 @@
 	<div class="form-group col-12 col-md-6 d-flex flex-column">
 		<label for="show-relations-filters-tri" class="font-weight-bold d-md-none"> TRIER PAR </label>
 		<label for="show-relations-filters-tri" class="font-weight-bold text-right d-none d-md-block"> TRIER PAR </label>
-		<!-- <div id="show-relations-filters-tri" class="d-flex flex-row w-100"> -->
-			<!-- <div>
-				<i id="show-relations-filters-tri-order" class="icon-up-big"> </i> 
-			</div> -->
-			<div class="btn-group" role="group">
-				<button id="show-relations-filters-tri-alpha" type="button" class="w-50 btn btn-outline-dark" (click)="tri(1)">
-					Alphabétique
-				</button>
-				<button id="show-relations-filters-tri-poids" type="button" class="w-50 btn btn-dark" (click)="tri(0)">
-					Poids
-				</button>
-			</div>
-		<!-- </div> -->
+		<div class="btn-group" role="group">
+			<button id="show-relations-filters-tri-alpha" type="button" class="w-50 btn btn-outline-dark" (click)="tri(1)">
+				Alphabétique
+			</button>
+			<button id="show-relations-filters-tri-poids" type="button" class="w-50 btn btn-dark" (click)="tri(0)">
+				Poids
+			</button>
+		</div>
 	</div>
 </form>
+
+<!-- Modal -->
+<div class="modal fade" id="raffinementsInfosModal" tabindex="-1" aria-labelledby="raffinementsInfosModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="raffinementsInfosModalLabel"> Raffinements </h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div>
+					Les raffinements sont les différents <span class="font-weight-bold"> sens sémantiques </span> que peut prendre un terme.<br>
+					Ces raffinements sont triés par fréquence d'utilisation.<br>
+					Cliquez sur un raffinement pour n'afficher que les relations relatives à ce sens du terme.<br>
+				</div>
+				<div class="mt-2">
+					Exemple pour le mot <span class="font-italic"> avocat </span> :
+					<ol>
+						<li> <span class="font-italic">justice </span> </li>
+						<li> <span class="font-italic">fruit </span> </li>
+						<li> <span class="font-italic">médiateur </span> </li>
+						<li> <span class="font-italic"> couleur </span> </li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
