@@ -1,16 +1,16 @@
-<div class="bg-white pt-3 pb-2 border-bottom shadow-sm">
-	<div class="container">
-		<form [formGroup]="searchForm" class="row" autocomplete="off">
-			<div class="form-group col-12">
-				<label for="terme" class="font-weight-bold"> TERME </label>
+<div class="bg-white py-3 border-bottom shadow-sm">
+  <div class="container">
+    <!-- <label for="terme" class="font-weight-bold"> TERME </label> -->
+    <form [formGroup]="searchForm" class="row" autocomplete="off">
+      <div class="col-9">
 				<input id="search-form-terme-input" type="text" class="form-control" formControlName="terme" (focusout)="focusout()" (focusin)="focusin()" placeholder="Entrez un terme pour afficher ses relations" required>
 				<app-autocomplete> </app-autocomplete>
 			</div>
 
-			<div class="form-group col-12 text-center mt-3">
-				<button type="submit" id="search-form-button-search" class="px-3 position-absolute btn btn-dark" (click)="search()"> <i class="icon-search"> </i> RECHERCHER </button>
+			<div class="col-3 text-center">
+				<button type="submit" id="search-form-button-search" class="w-100 px-3 btn btn-dark" (click)="search()"> <i class="icon-search"> </i> RECHERCHER </button>
 			</div>
-			
+
 		</form>
 	</div>
 </div>

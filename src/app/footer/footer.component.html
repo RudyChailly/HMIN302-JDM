@@ -1,6 +1,18 @@
-<footer class="footer  border-top py-2 d-flex flex-row justify-content-around" >
-	<div class="cursor-pointer text-secondary" (click)="printLocal()"> <i class="icon-doc-text-inv"> 
-		</i> Afficher le cache dans la console 
-	</div>
-	<div class="cursor-pointer text-danger " (click)="cleanLocal()"> <i class="icon-trash" > </i> Supprimer le cache </div>
+<footer class="footer bg-white shadow">
+<div class="border-top">
+  <div class="container">
+    <div class="row my-3">
+      <div class="col-6 d-flex flex-column">
+        <div class="text-uppercase font-size-09"> Cache local </div>
+        <div class="pt-3 cursor-pointer text-decoration-none text-secondary btn-link" (click)="printLocal()"> Afficher dans la console  </div>
+        <div class="pt-3 cursor-pointer text-decoration-none text-secondary btn-link" (click)="cleanLocal()"> Supprimer </div>
+      </div>
+      <div class="col-6 d-flex flex-column">
+        <div class="text-uppercase font-size-09"> Equipe </div>
+        <a href="mailto:rudy.chailly@etu.umontpellier.fr" class="pt-3 text-decoration-none text-secondary font-size-09"> CHAILLY Rudy</a>
+        <a href="mailto:davide.de-jesus-martins@etu.umontpellier.fr" class="py-3 text-decoration-none text-secondary font-size-09"> DE JESUS MARTINS Davide</a>
+      </div>
+    </div>
+  </div>
+</div>
 </footer>

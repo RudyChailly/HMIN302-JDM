@@ -1,4 +1,5 @@
 export let typeRelations = [
+  {"id": 0, "nom": "Idées associées", "short": "ASOC"},
 	{"id": 5, "nom": "Synonymes", "short": "SYN"},
 	{"id": 6, "nom": "Génériques", "short": "GÉN"},
 	{"id": 7, "nom": "Antonymes", "short": "ANTO"},

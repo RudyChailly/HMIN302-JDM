@@ -18,13 +18,6 @@ app.use(function(req,res,next){
 MongoClient.connect(url,{useNewUrlParser: true, useUnifiedTopology: true},(err,client) => {
 	let db = client.db("MOTS");
 	let termes = [];
-	/*db.collection("termes").find().toArray((err, documents) => {
-		documents.forEach(element => {
-			termes.push(decodeURI(element["t"]));
-		});
-		termes = stringArraySort(termes);
-		console.log("Serveur prêt.")
-	});*/
 
 	app.get("/autocomplete/:terme", (req,res) => {
 		let terme = encodeURIComponent(req.params.terme);
@@ -46,7 +39,7 @@ MongoClient.connect(url,{useNewUrlParser: true, useUnifiedTopology: true},(err,c
 
 	app.get("/rezo-dump/:terme", (req, res) => {
 		let terme = decodeURIComponent(req.params.terme);
-		request({encoding: null, uri: "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel="+terme+"&rel="}, 
+		request({encoding: null, uri: "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel="+terme+"&rel="},
 			function(error, response, source_code) {
 				if (source_code) {
 					let utf8 = iconv.decode(new Buffer.from(source_code), "ISO-8859-1");
@@ -78,7 +71,7 @@ MongoClient.connect(url,{useNewUrlParser: true, useUnifiedTopology: true},(err,c
 				}
 				// La relation du mot n'est pas stockee en cache
 				else {
-					request({encoding: null, uri: "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel="+terme+"&rel="+typeRelation+"&relin=norelin"}, 
+					request({encoding: null, uri: "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel="+terme+"&rel="+typeRelation+"&relin=norelin"},
 						function(error, response, sourceCode) {
 							if (sourceCode) {
 								let sourceCodeEncoded = iconv.decode(new Buffer.from(sourceCode), "ISO-8859-1");
@@ -91,7 +84,7 @@ MongoClient.connect(url,{useNewUrlParser: true, useUnifiedTopology: true},(err,c
 				}
 			}
 			else {
-				request({encoding: null, uri: "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel="+terme+"&rel="+typeRelation+"&relin=norelin"}, 
+				request({encoding: null, uri: "http://www.jeuxdemots.org/rezo-dump.php?gotermsubmit=Chercher&gotermrel="+terme+"&rel="+typeRelation+"&relin=norelin"},
 					function(error, response, sourceCode) {
 						if (sourceCode) {
 							let sourceCodeEncoded = iconv.decode(new Buffer.from(sourceCode), "ISO-8859-1");
